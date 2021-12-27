@@ -50,10 +50,48 @@ class GraphAlgo(GraphAlgoInterface):
         return answer
 
     def TSP(self, node_lst: List[int]) -> (List[int], float):
-        pass
+        sum = 0.0
+        answerlist = []
+        run_node_id = self.graph.nodes.get(node_lst.get(0))
+        dest_node_id = run_node_id
+        while run_node_id!=None and len(node_lst)!=1:
+            node_lst.remove(run_node_id)
+            self.dijkstra_algo(run_node_id)
+            mindist = float("inf")
+            for id_n in node_lst:
+                temp_node = self.graph.nodes.get(id_n)
+                if temp_node.tag == -1:
+                    return ([],float("inf"))
+                if temp_node.weight<mindist:
+                    mindist = temp_node.weight
+                    dest_node_id = temp_node.id
+            sum = sum + mindist
+            check_node = self.graph.nodes.get(dest_node_id)
+            temp_list =[]
+            while check_node.tag != -1:
+                temp_list.insert(0,check_node.id)
+                check_node = self.graph.nodes.get(check_node.tag)
+            temp_list.insert(0, check_node.id)
+            while len(temp_list)!=1:
+                answerlist.insert(-1, temp_list.pop(0))
+            run_node_id = dest_node_id
+        answerlist.add(self.graph.nodes.get(run_node_id))
+        return (answerlist, sum)
+
 
     def centerPoint(self) -> (int, float):
-        pass
+        if self.is_connected():
+            return (-1 , float("inf"))
+        min = float("inf")
+        min_id = None
+        for node in self.graph.nodes.values():
+            temp = self.max_dist(node.id)
+            if temp<=min:
+                min = temp
+                min_id = node.id
+        return (min_id, min)
+
+
 
 
     def plot_graph(self) -> None:
@@ -89,6 +127,14 @@ class GraphAlgo(GraphAlgoInterface):
                     elif node.weight < run_node.weigth:
                         run_node = node
         return
+
+    def max_dist(self, src):
+        self.dijkstra_algo(src)
+        max =0.0
+        for node in self.graph.nodes.values():
+            if node.weight>max and node.weight!= float("inf"):
+                max = node.weight
+        return max
 
     def dfs(self, node : Node) -> None:
         stack = list()

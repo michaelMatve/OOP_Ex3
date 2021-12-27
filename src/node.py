@@ -1,5 +1,5 @@
 class Node:
-    def __init__(self,id : int, pos : tuple):
+    def __init__(self,id: int, pos: tuple = None):
         self.pos = pos
         self.id = id
         self.in_edges = {}
