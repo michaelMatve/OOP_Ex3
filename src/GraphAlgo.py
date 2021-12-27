@@ -114,7 +114,7 @@ class GraphAlgo(GraphAlgoInterface):
             plt.text(x, y, str(node.id), color= "red", fontsize= 12)
             for neigh in node.out_edges:
                 neigh_x, neigh_y, neigh_z = self.graph.nodes.get(neigh).pos
-                plt.annotate("", xy=(x, y), xytext=(neigh_x, neigh_y), arrowprops=dict(arrowstyle="<-"))
+                plt.annotate("", xy=(x, y), xytext=(neigh_x, neigh_y), arrowprops=dict(arrowstyle="<|-"))
 
 
         plt.show()
