@@ -177,7 +177,7 @@ class GraphAlgo(GraphAlgoInterface):
             if node.tag == -1:
                 node.tag = 1
 
-            for i in node.in_edges:
+            for i in node.out_edges:
                 if self.graph.nodes.get(i).tag == -1:
                     stack.append(self.graph.nodes.get(i))
 
