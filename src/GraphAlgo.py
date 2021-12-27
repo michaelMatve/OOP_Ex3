@@ -25,6 +25,8 @@ class GraphAlgo(GraphAlgoInterface):
                 self.graph.add_edge(edge.get('src'), edge.get('dest'), edge.get('w'))
         except IOError as e:
             print(e)
+            return False
+        return True
 
     def save_to_json(self, file_name: str) -> bool:
         try:
@@ -33,9 +35,19 @@ class GraphAlgo(GraphAlgoInterface):
                 json.dump(temp_dict, indent=4, fp=file)
         except IOError as e:
             print(e)
+            return False
+        return True
 
     def shortest_path(self, id1: int, id2: int) -> (float, list):
-        pass
+        self.dijkstra_algo(id1)
+        answerList = []
+        check_node = self.graph.nodes.get(id2)
+        while check_node.tag != -1:
+            answerList.insert(0,check_node.id)
+            check_node = self.graph.nodes.get(check_node.tag)
+        answerList.insert(0,check_node.id)
+        answer = (self.graph.nodes.get(id2).weight,answerList)
+        return answer
 
     def TSP(self, node_lst: List[int]) -> (List[int], float):
         pass
@@ -57,63 +69,37 @@ class GraphAlgo(GraphAlgoInterface):
                 temp_dict['Edges'].append({'src': node.id, 'w': node.out_edges[d], 'dest': d})
         return temp_dict
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    def dijkstra_algo(self, src: int):
+        self.set_tags_weigth()
+        run_node = self.graph.nodes.get(src)
+        run_node.weight = 0.0
+        while run_node != None:
+            run_node.info = 'b'
+            for des in run_node.out_edge:
+                temp_node = self.graph.nodes.get(des)
+                if temp_node.info == 'w':
+                    if temp_node.weight >(run_node.weight + run_node.get(des)):
+                        temp_node.weight = run_node.weight + run_node.get(des)
+                        temp_node.tag = run_node.id
+            run_node = None
+            for node in self.graph.nodes.values():
+                if node.info == 'w' and node.tag != -1:
+                    if run_node == None:
+                        run_node = node
+                    elif node.weight < run_node.weigth:
+                        run_node = node
+        return
 
     def dfs(self, node : Node) -> None:
         stack = list()
         stack.append(node)
         while stack:
             node = stack.pop()
-            if node.tag == 0:
+            if node.tag == -1:
                 node.tag = 1
 
             for i in node.in_edges:
-                if self.graph.nodes.get(i).tag == 0:
+                if self.graph.nodes.get(i).tag == -1:
                     stack.append(self.graph.nodes.get(i))
 
 
@@ -132,23 +118,24 @@ class GraphAlgo(GraphAlgoInterface):
         return transpose
 
 
-    def set_tags(self) -> None:
+    def set_tags_weigth(self) -> None:
         for i in self.graph.nodes.values():
-            i.tag = 0
-
+            i.tag = -1
+            i.weigth = float("inf")
+            i.info = 'w'
 
     def is_connected(self):
-        self.set_tags()
+        self.set_tags_weigth()
         self.dfs(self.graph.nodes.get(0))
         for i in self.graph.nodes.values():
-            if i.tag == 0:
+            if i.tag == -1:
                 return False
 
         transpose = self.get_transpose()
-        transpose.set_tags()
+        transpose.set_tags_weigth()
         transpose.dfs(self.graph.nodes.get(0))
         for i in transpose.graph.nodes.values():
-            if i.tag == 0:
+            if i.tag == -1:
                 return False
 
         return True

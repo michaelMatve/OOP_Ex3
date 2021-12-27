@@ -4,8 +4,9 @@ class Node:
         self.id = id
         self.in_edges = {}
         self.out_edges = {}
-        self.tag = 0
-        self.weight = 0
+        self.tag = -1
+        self.weight = 0.0
+        self.info = 'w'
 
 
 
