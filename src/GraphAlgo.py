@@ -10,7 +10,9 @@ from src.GraphInterface import GraphInterface
 
 
 class GraphAlgo(GraphAlgoInterface):
-    def __init__(self, graph: DiGraph):
+    def __init__(self, graph: DiGraph=None):
+        if graph==None:
+            graph = DiGraph()
         self.graph = graph
 
     def get_graph(self) -> GraphInterface:
@@ -22,7 +24,10 @@ class GraphAlgo(GraphAlgoInterface):
                 temp_dict = json.load(file)
 
             for node in temp_dict['Nodes']:
-                self.graph.add_node(node.get('id'), tuple(float(s) for s in node.get('pos').strip("()").split(",")))
+                if node.get('pos') != None:
+                    self.graph.add_node(node.get('id'), tuple(float(s) for s in node.get('pos').strip("()").split(",")))
+                else:
+                    self.graph.add_node(node.get('id'))
             for edge in temp_dict['Edges']:
                 self.graph.add_edge(edge.get('src'), edge.get('dest'), edge.get('w'))
         except IOError as e:
@@ -44,6 +49,8 @@ class GraphAlgo(GraphAlgoInterface):
         self.dijkstra_algo(id1)
         answerList = []
         check_node = self.graph.nodes.get(id2)
+        if(check_node.tag == -1):
+            return (float("inf"),[])
         while check_node.tag != -1:
             answerList.insert(0,check_node.id)
             check_node = self.graph.nodes.get(check_node.tag)
@@ -54,10 +61,9 @@ class GraphAlgo(GraphAlgoInterface):
     def TSP(self, node_lst: List[int]) -> (List[int], float):
         sum = 0.0
         answerlist = []
-        run_node_id = self.graph.nodes.get(node_lst.get(0))
+        run_node_id = node_lst.pop(0)
         dest_node_id = run_node_id
-        while run_node_id!=None and len(node_lst)!=1:
-            node_lst.remove(run_node_id)
+        while run_node_id!=None and len(node_lst)>1:
             self.dijkstra_algo(run_node_id)
             mindist = float("inf")
             for id_n in node_lst:
@@ -77,12 +83,13 @@ class GraphAlgo(GraphAlgoInterface):
             while len(temp_list)!=1:
                 answerlist.insert(-1, temp_list.pop(0))
             run_node_id = dest_node_id
-        answerlist.add(self.graph.nodes.get(run_node_id))
+            node_lst.remove(run_node_id)
+        answerlist.append(self.graph.nodes.get(run_node_id))
         return (answerlist, sum)
 
 
     def centerPoint(self) -> (int, float):
-        if self.is_connected():
+        if not self.is_connected():
             return (-1 , float("inf"))
         min = float("inf")
         min_id = None
@@ -99,10 +106,11 @@ class GraphAlgo(GraphAlgoInterface):
         for node in self.graph.nodes.values():
             if node.pos == None:
                 node.pos = self.random_pos()
+        for node in self.graph.nodes.values():
             x, y, z = node.pos
             plt.plot(x, y, markersize= 10, marker= "o", color= "black")
             plt.text(x, y, str(node.id), color= "red", fontsize= 12)
-            for neigh in node.in_edges:
+            for neigh in node.out_edges:
                 neigh_x, neigh_y, neigh_z = self.graph.nodes.get(neigh).pos
                 plt.annotate("", xy=(x, y), xytext=(neigh_x, neigh_y), arrowprops=dict(arrowstyle="<-"))
 
@@ -124,7 +132,10 @@ class GraphAlgo(GraphAlgoInterface):
         temp_dict['Edges'] = []
         temp_dict['Nodes'] = []
         for node in self.graph.nodes.values():
-            temp_dict['Nodes'].append({'pos': "{},{},{}".format(node.pos[0], node.pos[1], node.pos[2]), 'id': node.id})
+            if node.pos!=None:
+                temp_dict['Nodes'].append({'pos': "{},{},{}".format(node.pos[0], node.pos[1], node.pos[2]), 'id': node.id})
+            else:
+                temp_dict['Nodes'].append({'id': node.id})
             for d in node.out_edges:
                 temp_dict['Edges'].append({'src': node.id, 'w': node.out_edges[d], 'dest': d})
         return temp_dict
@@ -135,18 +146,18 @@ class GraphAlgo(GraphAlgoInterface):
         run_node.weight = 0.0
         while run_node != None:
             run_node.info = 'b'
-            for des in run_node.out_edge:
+            for des in run_node.out_edges:
                 temp_node = self.graph.nodes.get(des)
                 if temp_node.info == 'w':
-                    if temp_node.weight >(run_node.weight + run_node.get(des)):
-                        temp_node.weight = run_node.weight + run_node.get(des)
+                    if temp_node.weight > (run_node.weight + run_node.out_edges.get(des)):
+                        temp_node.weight = run_node.weight + run_node.out_edges.get(des)
                         temp_node.tag = run_node.id
             run_node = None
             for node in self.graph.nodes.values():
                 if node.info == 'w' and node.tag != -1:
                     if run_node == None:
                         run_node = node
-                    elif node.weight < run_node.weigth:
+                    elif node.weight < run_node.weight:
                         run_node = node
         return
 
@@ -189,7 +200,7 @@ class GraphAlgo(GraphAlgoInterface):
     def set_tags_weigth(self) -> None:
         for i in self.graph.nodes.values():
             i.tag = -1
-            i.weigth = float("inf")
+            i.weight = float("inf")
             i.info = 'w'
 
     def is_connected(self):

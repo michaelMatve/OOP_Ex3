@@ -68,7 +68,7 @@ class DiGraph(GraphInterface):
         if self.nodes.get(node_id1).out_edges.get(node_id2) == None:
             return False
         self.nodes.get(node_id1).out_edges.pop(node_id2)
-        self.nodes.get(node_id1).in_edges.pop(node_id2)
+        self.nodes.get(node_id2).in_edges.pop(node_id1)
         self.num_edges -= 1
         self.mc += 1
         return True
