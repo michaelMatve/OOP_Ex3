@@ -8,7 +8,9 @@ from DiGraph import DiGraph
 from node import Node
 from src.GraphInterface import GraphInterface
 
+"""
 
+"""
 class GraphAlgo(GraphAlgoInterface):
     def __init__(self, graph: DiGraph=None):
         if graph==None:
