@@ -84,6 +84,8 @@ class DiGraph(GraphInterface):
             if node.id != node_id:
                 if self.remove_edge(node_id, node.id)==True:
                     self.mc +=1
+                if self.remove_edge(node.id, node_id)==True:
+                    self.mc +=1
         self.nodes.pop(node_id)
         self.num_nodes -= 1
         self.mc += 1
