@@ -61,18 +61,19 @@ class GraphAlgo(GraphAlgoInterface):
     def TSP(self, node_lst: List[int]) -> (List[int], float):
         sum = 0.0
         answerlist = []
-        run_node_id = node_lst.pop(0)
+        run_node_id = node_lst[0]
         dest_node_id = run_node_id
         while run_node_id!=None and len(node_lst)>1:
+            node_lst.remove(run_node_id)
             self.dijkstra_algo(run_node_id)
             mindist = float("inf")
             for id_n in node_lst:
                 temp_node = self.graph.nodes.get(id_n)
-                if temp_node.tag == -1:
-                    return ([],float("inf"))
                 if temp_node.weight<mindist:
                     mindist = temp_node.weight
                     dest_node_id = temp_node.id
+            if mindist==float("inf"):
+                return ([],float("inf"))
             sum = sum + mindist
             check_node = self.graph.nodes.get(dest_node_id)
             temp_list =[]
@@ -81,10 +82,9 @@ class GraphAlgo(GraphAlgoInterface):
                 check_node = self.graph.nodes.get(check_node.tag)
             temp_list.insert(0, check_node.id)
             while len(temp_list)!=1:
-                answerlist.insert(-1, temp_list.pop(0))
+                answerlist.append(temp_list.pop(0))
             run_node_id = dest_node_id
-            node_lst.remove(run_node_id)
-        answerlist.append(self.graph.nodes.get(run_node_id))
+        answerlist.append(self.graph.nodes.get(run_node_id).id)
         return (answerlist, sum)
 
 
