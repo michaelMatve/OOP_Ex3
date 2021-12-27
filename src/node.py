@@ -13,5 +13,8 @@ class Node:
         self.weight = float('inf')
         self.info = 'w'
 
+    def __repr__(self):
+        return "0: |edges_out| {} |edges in| {}".format(len(self.out_edges), len(self.in_edges))
+
 
 

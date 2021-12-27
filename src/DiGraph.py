@@ -27,7 +27,7 @@ class DiGraph(GraphInterface):
         return self.num_edges
 
     def get_all_v(self) -> dict:
-        pass
+        return self.nodes
 
     """
      return all the incoming edges
@@ -105,5 +105,7 @@ class DiGraph(GraphInterface):
         self.num_edges -= 1
         self.mc += 1
         return True
+    def __str__(self):
+        return "Graph: |V|={}, |E|={}".format(self.num_nodes, self.num_edges)
 
 

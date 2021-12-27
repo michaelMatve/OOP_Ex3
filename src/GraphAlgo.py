@@ -102,7 +102,8 @@ class GraphAlgo(GraphAlgoInterface):
             while check_node.tag != -1: # add all the nodes id in the path to the temp list
                 temp_list.insert(0,check_node.id)
                 check_node = self.graph.nodes.get(check_node.tag)
-            while len(temp_list)!=0: # copy the temp list data in to the answer list
+            temp_list.insert(0,check_node.id)
+            while len(temp_list)!=1: # copy the temp list data in to the answer list
                 answerlist.append(temp_list.pop(0))
             run_node_id = dest_node_id # chang the run nude to the node id we go to
         answerlist.append(self.graph.nodes.get(run_node_id).id) # add the last node id that in the list
