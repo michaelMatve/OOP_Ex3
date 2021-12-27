@@ -74,7 +74,8 @@ class GraphAlgo(GraphAlgoInterface):
         for i in self.graph.nodes.values():
             transpose.add_node(i)
 
-        for j in self.graph.nodes.values():
+        for i in transpose.nodes.values():
+            i.in_edges
 
 
 
