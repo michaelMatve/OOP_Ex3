@@ -1,5 +1,7 @@
 import json
+import random
 from typing import List
+import matplotlib.pyplot as plt
 
 from src.GraphAlgoInterface import GraphAlgoInterface
 from DiGraph import DiGraph
@@ -93,9 +95,29 @@ class GraphAlgo(GraphAlgoInterface):
 
 
 
-
     def plot_graph(self) -> None:
-        pass
+        for node in self.graph.nodes.values():
+            if node.pos == None:
+                node.pos = self.random_pos()
+            x, y, z = node.pos
+            plt.plot(x, y, markersize= 10, marker= "o", color= "black")
+            plt.text(x, y, str(node.id), color= "red", fontsize= 12)
+            for neigh in node.in_edges:
+                neigh_x, neigh_y, neigh_z = self.graph.nodes.get(neigh).pos
+                plt.annotate("", xy=(x, y), xytext=(neigh_x, neigh_y), arrowprops=dict(arrowstyle="<-"))
+
+
+        plt.show()
+
+
+    def random_pos(self) -> tuple:
+        x = random.uniform(35.187594216303474, 35.21310882485876)
+        y = random.uniform(32.10152879327731, 32.10788938151261)
+        z = 0.0
+        ans = (x, y, z)
+        return ans
+
+
 
     def to_json_file(self):
         temp_dict = {}
