@@ -45,7 +45,7 @@ class DiGraph(GraphInterface):
         if (self.nodes.get(node_id) != None):
             return False
         self.nodes[node_id]= Node(node_id, pos)
-        self.nodes += 1
+        self.num_nodes += 1
         self.mc += 1
         return True
 
@@ -57,6 +57,7 @@ class DiGraph(GraphInterface):
                 node.out_edges.pop(node_id)
                 node.in_edges.pop(node_id)
         self.nodes.pop(node_id)
+        self.num_nodes -= 1
         self.mc += 1
         return True
 

@@ -116,13 +116,40 @@ class GraphAlgo(GraphAlgoInterface):
                 if self.graph.nodes.get(i).tag == 0:
                     stack.append(self.graph.nodes.get(i))
 
+
     def get_transpose(self):
-        transpose = DiGraph()
+        transpose = GraphAlgo()
         for i in self.graph.nodes.values():
-            transpose.add_node(i)
+            transpose.graph.add_node(i.id, i.pos)
 
-        for i in transpose.nodes.values():
-            i.in_edges
+        for i in self.graph.nodes.values():
+            for j in i.in_edges:
+                transpose.graph.add_edge(j, i.id)
+
+            for j in i.out_edges:
+                transpose.graph.add_edge(j, i.id)
+
+        return transpose
 
 
+    def set_tags(self) -> None:
+        for i in self.graph.nodes.values():
+            i.tag = 0
+
+
+    def is_connected(self):
+        self.set_tags()
+        self.dfs(self.graph.nodes.get(0))
+        for i in self.graph.nodes.values():
+            if i.tag == 0:
+                return False
+
+        transpose = self.get_transpose()
+        transpose.set_tags()
+        transpose.dfs(self.graph.nodes.get(0))
+        for i in transpose.graph.nodes.values():
+            if i.tag == 0:
+                return False
+
+        return True
 
