@@ -1,3 +1,8 @@
+"""
+this is class represent an node that contain pos and id.
+in addition every node has 2 dicts one for all the incoming edges and one for all the out edges
+"""
+
 class Node:
     def __init__(self,id: int, pos: tuple = None):
         self.pos = pos

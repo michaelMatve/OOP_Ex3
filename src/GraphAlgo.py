@@ -141,7 +141,7 @@ class GraphAlgo(GraphAlgoInterface):
         return temp_dict
 
     def dijkstra_algo(self, src: int):
-        self.set_tags_weigth()
+        self.set_tags_weight()
         run_node = self.graph.nodes.get(src)
         run_node.weight = 0.0
         while run_node != None:
@@ -197,21 +197,21 @@ class GraphAlgo(GraphAlgoInterface):
         return transpose
 
 
-    def set_tags_weigth(self) -> None:
+    def set_tags_weight(self) -> None:
         for i in self.graph.nodes.values():
             i.tag = -1
             i.weight = float("inf")
             i.info = 'w'
 
     def is_connected(self):
-        self.set_tags_weigth()
+        self.set_tags_weight()
         self.dfs(self.graph.nodes.get(0))
         for i in self.graph.nodes.values():
             if i.tag == -1:
                 return False
 
         transpose = self.get_transpose()
-        transpose.set_tags_weigth()
+        transpose.set_tags_weight()
         transpose.dfs(self.graph.nodes.get(0))
         for i in transpose.graph.nodes.values():
             if i.tag == -1:
