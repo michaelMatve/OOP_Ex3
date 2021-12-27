@@ -57,6 +57,53 @@ class GraphAlgo(GraphAlgoInterface):
                 temp_dict['Edges'].append({'src': node.id, 'w': node.out_edges[d], 'dest': d})
         return temp_dict
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     def dfs(self, node : Node) -> None:
         stack = list()
         stack.append(node)
