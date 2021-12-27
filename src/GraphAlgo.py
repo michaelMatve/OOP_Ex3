@@ -56,3 +56,25 @@ class GraphAlgo(GraphAlgoInterface):
             for d in node.out_edges:
                 temp_dict['Edges'].append({'src': node.id, 'w': node.out_edges[d], 'dest': d})
         return temp_dict
+
+    def dfs(self, node : Node) -> None:
+        stack = list()
+        stack.append(node)
+        while stack.__sizeof__() != 0:
+            node = stack.pop()
+            if node.tag == 0:
+                node.tag = 1
+
+            for i in node.in_edges:
+                if self.graph.nodes.get(i).tag == 0:
+                    stack.append(self.graph.nodes.get(i))
+
+    def get_transpose(self):
+        transpose = DiGraph()
+        for i in self.graph.nodes.values():
+            transpose.add_node(i)
+
+        for j in self.graph.nodes.values():
+
+
+

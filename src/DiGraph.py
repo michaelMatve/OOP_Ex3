@@ -6,6 +6,7 @@ class DiGraph(GraphInterface):
     def __init__(self):
         self.nodes = {}
 
+
     def v_size(self) -> int:
         pass
 
