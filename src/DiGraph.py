@@ -33,13 +33,17 @@ class DiGraph(GraphInterface):
      return all the incoming edges
     """
     def all_in_edges_of_node(self, id1: int) -> dict:
-        return self.nodes[id1].in_edges
+        if self.nodes.get(id1) != None:
+            return self.nodes[id1].in_edges
+        return None
 
     """
      return all the out edges
     """
     def all_out_edges_of_node(self, id1: int) -> dict:
-        return self.nodes[id1].out_edges
+        if self.nodes.get(id1) != None:
+            return self.nodes[id1].out_edges
+        return None
     """
     return the number of changes
     """

@@ -39,9 +39,19 @@ class TestDiGraph(TestCase):
     def test_all_in_edges_of_node(self):
         algo1 = GraphAlgo()
         algo1.load_from_json("..\\data\\A1.json")
-        self.assertEqual(16, algo1.graph.all_in_edges_of_node(0).get(0))
+        self.assertEqual(1.8635670623870366, algo1.graph.all_in_edges_of_node(0).get(1))
+        algo1.graph.remove_edge(1,0)
+        self.assertEqual(None, algo1.graph.all_in_edges_of_node(0).get(1))
+        algo1.graph.remove_node(0)
+        self.assertEqual(None, algo1.graph.all_in_edges_of_node(0))
+
+
+
 
     def test_all_out_edges_of_node(self):
+        algo1 = GraphAlgo()
+        algo1.load_from_json("..\\data\\A1.json")
+
         self.fail()
 
     def test_get_mc(self):
