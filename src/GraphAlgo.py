@@ -116,7 +116,6 @@ class GraphAlgo(GraphAlgoInterface):
                 neigh_x, neigh_y, neigh_z = self.graph.nodes.get(neigh).pos
                 plt.annotate("", xy=(x, y), xytext=(neigh_x, neigh_y), arrowprops=dict(arrowstyle="<|-"))
 
-
         plt.show()
 
 
@@ -185,18 +184,11 @@ class GraphAlgo(GraphAlgoInterface):
 
 
     def get_transpose(self):
-        transpose = GraphAlgo(DiGraph())
         for i in self.graph.nodes.values():
-            transpose.graph.add_node(i.id, i.pos)
+            temp = i.in_edges.copy()
+            i.in_edges = i.out_edges.copy()
+            i.out_edges = temp.copy()
 
-        for i in self.graph.nodes.values():
-            for j in i.in_edges:
-                transpose.graph.add_edge(j, i.id, i.in_edges.get(j))
-
-            for j in i.out_edges:
-                transpose.graph.add_edge(j, i.id, i.out_edges.get(j))
-
-        return transpose
 
 
     def set_tags_weight(self) -> None:
@@ -212,13 +204,14 @@ class GraphAlgo(GraphAlgoInterface):
             if i.tag == -1:
                 return False
 
-        transpose = self.get_transpose()
-        transpose.set_tags_weight()
-        transpose.dfs(self.graph.nodes.get(0))
-        for i in transpose.graph.nodes.values():
+        self.get_transpose()
+        self.set_tags_weight()
+        self.dfs(self.graph.nodes.get(0))
+        for i in self.graph.nodes.values():
             if i.tag == -1:
+                self.get_transpose()
                 return False
-
+        self.get_transpose()
         return True
 
 

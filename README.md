@@ -36,7 +36,7 @@ this class has the following function:
 7. plot_graph </br> this function draws the graph. at first, this function checks if there are node that dont have pos, if so it uses the random_pos function that creates random pos. after that we go through all the nodes in the graph, and draw it. and for every node we draw its out_edges.
 8. is_connected </br> this function check if the graph is strongly connected components.at first,  we set all the tags of the nodes in this graph to -1, then we do dfs on the first node of the graph, and then we go through all the nodes in the graph. if there is a node that its tag is -1 it means that the graph is not connected. if not, we create a transpose graph using the get_transpose function, sets all the nodes' tag to -1, and do dfs on the first node. then, we go through all the nodes in the transpose graph, if there is a node with tag -1, it means the graph is not connected. if not, it means the graph is SCC.
 9. dfs </br> this function is an iterative dfs. we get a node and adds him to a stack, then run while the stack is not empty, we check if we didnt touch the first node in the stack, if we didnt touch him we change his tag, and then run through all his out_edges and add the nodes that we didnt touch to the stack.
-10. get_transpose </br> this function returns a transpose graph. we create a new graph, and add all the nodes of the original graph to this graph. then, go through all the edges of the original graph, for every edge we create a new edge by switch the src and dest, and adding it to the transpose graph.
+10. get_transpose </br> this function changes the graph to a transpose graph. we switch between in_edges to out_edges.
 
 
 
