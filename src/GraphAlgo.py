@@ -107,7 +107,7 @@ class GraphAlgo(GraphAlgoInterface):
     def dfs(self, node : Node) -> None:
         stack = list()
         stack.append(node)
-        while stack.__sizeof__() != 0:
+        while stack:
             node = stack.pop()
             if node.tag == 0:
                 node.tag = 1
@@ -118,16 +118,16 @@ class GraphAlgo(GraphAlgoInterface):
 
 
     def get_transpose(self):
-        transpose = GraphAlgo()
+        transpose = GraphAlgo(DiGraph())
         for i in self.graph.nodes.values():
             transpose.graph.add_node(i.id, i.pos)
 
         for i in self.graph.nodes.values():
             for j in i.in_edges:
-                transpose.graph.add_edge(j, i.id)
+                transpose.graph.add_edge(j, i.id, i.in_edges.get(j))
 
             for j in i.out_edges:
-                transpose.graph.add_edge(j, i.id)
+                transpose.graph.add_edge(j, i.id, i.out_edges.get(j))
 
         return transpose
 
@@ -152,4 +152,6 @@ class GraphAlgo(GraphAlgoInterface):
                 return False
 
         return True
+
+
 

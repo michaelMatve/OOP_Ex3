@@ -12,7 +12,7 @@ def load_test():
     # print(my_graph1.graph.nodes.get(0).out_edges[1])
     # print(my_graph1.graph.nodes.get(0).in_edges[1])
 
-
+    print(my_graph.is_connected())
 
 if __name__ == '__main__':
     load_test()
