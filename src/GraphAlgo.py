@@ -1,16 +1,22 @@
 import json
+from typing import List
 
 from src.GraphAlgoInterface import GraphAlgoInterface
 from DiGraph import DiGraph
 from node import Node
+from src.GraphInterface import GraphInterface
+
 
 class GraphAlgo(GraphAlgoInterface):
-    def __init__(self,graph :DiGraph):
+    def __init__(self, graph: DiGraph):
         self.graph = graph
+
+    def get_graph(self) -> GraphInterface:
+        pass
 
     def load_from_json(self, file_name: str) -> bool:
         try:
-            with open( file_name, 'r') as file:
+            with open(file_name, 'r') as file:
                 temp_dict = json.load(file)
 
             for node in temp_dict['Nodes']:
@@ -22,8 +28,8 @@ class GraphAlgo(GraphAlgoInterface):
 
     def save_to_json(self, file_name: str) -> bool:
         try:
-            with open( file_name, 'w') as file:
-                temp_dict =self.to_json_file()
+            with open(file_name, 'w') as file:
+                temp_dict = self.to_json_file()
                 json.dump(temp_dict, indent=4, fp=file)
         except IOError as e:
             print(e)
@@ -31,16 +37,22 @@ class GraphAlgo(GraphAlgoInterface):
     def shortest_path(self, id1: int, id2: int) -> (float, list):
         pass
 
+    def TSP(self, node_lst: List[int]) -> (List[int], float):
+        pass
+
+    def centerPoint(self) -> (int, float):
+        pass
+
+
     def plot_graph(self) -> None:
         pass
 
     def to_json_file(self):
         temp_dict = {}
-        temp_dict['Edges']=[]
-        temp_dict['Nodes']=[]
-        for node in self.graph.nodes.values() :
-            temp_dict['Nodes'].append({'pos' :  "{},{},{}".format(node.pos[0],node.pos[1],node.pos[2]), 'id' : node.id})
+        temp_dict['Edges'] = []
+        temp_dict['Nodes'] = []
+        for node in self.graph.nodes.values():
+            temp_dict['Nodes'].append({'pos': "{},{},{}".format(node.pos[0], node.pos[1], node.pos[2]), 'id': node.id})
             for d in node.out_edges:
-                temp_dict['Edges'].append({'src' : node.id , 'w' : node.out_edges[d] , 'dest' : d})
+                temp_dict['Edges'].append({'src': node.id, 'w': node.out_edges[d], 'dest': d})
         return temp_dict
-

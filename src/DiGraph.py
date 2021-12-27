@@ -12,6 +12,15 @@ class DiGraph(GraphInterface):
     def e_size(self) -> int:
         pass
 
+    def get_all_v(self) -> dict:
+        pass
+
+    def all_in_edges_of_node(self, id1: int) -> dict:
+        pass
+
+    def all_out_edges_of_node(self, id1: int) -> dict:
+        pass
+
     def get_mc(self) -> int:
         pass
 
