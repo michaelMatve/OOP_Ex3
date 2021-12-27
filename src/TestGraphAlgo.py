@@ -8,7 +8,7 @@ class TestGraphAlgo(TestCase):
     def make_my_graph(self):
         my_algo = GraphAlgo()
         my_algo.graph.add_node(0, (1.1, 1.5, 0))
-        my_algo.graph.add_node(2, (1.4, 1.3 , 0))
+        my_algo.graph.add_node(2, (1.4, 1.3, 0))
         my_algo.graph.add_node(5,(1.1, 0.5, 0))
         my_algo.graph.add_node(6, (1.3, 1, 0))
         my_algo.graph.add_node(7, (1.5, 0.8, 0))
@@ -59,18 +59,34 @@ class TestGraphAlgo(TestCase):
         self.assertEqual(my_algo_js.graph.nodes.get(13).in_edges.get(7), my_algo_in.graph.nodes.get(13).in_edges.get(7))
 
     def test_shortest_path(self):
-        self.fail()
+        my_algo_in = self.make_my_graph()
+        self.assertEqual(my_algo_in.shortest_path(0,10)[0], 3)
+        self.assertEqual(my_algo_in.shortest_path(0, 10)[1], [0,2,10])
+        self.assertEqual(my_algo_in.shortest_path(0, 12)[0], 4)
+        self.assertEqual(my_algo_in.shortest_path(0, 12)[1], [0,2,10,12])
+        self.assertEqual(my_algo_in.shortest_path(0, 5)[0], 5.5)
+        self.assertEqual(my_algo_in.shortest_path(0, 5)[1], [0,2,10,6,5])
+
+        self.assertEqual(my_algo_in.shortest_path(5, 6)[0], 5.75)
+        self.assertEqual(my_algo_in.shortest_path(5, 6)[1], [5,7,13,10,6])
+        self.assertEqual(my_algo_in.shortest_path(5, 12)[0], 5.65)
+        self.assertEqual(my_algo_in.shortest_path(5, 12)[1], [5,7,13,10,12])
+        self.assertEqual(my_algo_in.shortest_path(5, 10)[0], 4.65)
+        self.assertEqual(my_algo_in.shortest_path(5, 10)[1], [5,7,13,10])
 
     def test_tsp(self):
-        self.fail()
-
-    def test_center_point(self):
         my_algo_in = self.make_my_graph()
-        self.assertEqual(my_algo_in.is_connected(),True)
-        my_algo_in.graph.remove_node(0)
-        self.assertEqual(my_algo_in.is_connected(), True)
-        my_algo_in.graph.remove_edge(6,2)
-        self.assertEqual(my_algo_in.is_connected(), False)
+        self.assertEqual(my_algo_in.TSP([12,0, 10, 6])[1], 8.45)
+        self.assertEqual((my_algo_in.TSP([12,0, 10, 6])[0]), [12,13,10,6,2,0])
+        my_algo_in.dijkstra_algo(13)
+        print(my_algo_in.graph.nodes.get(5).weight)
+        self.assertEqual(my_algo_in.TSP([0,12,10,6])[1], 8.65)
+        self.assertEqual(my_algo_in.TSP([0,12,10,6])[0], [0,2,10,12,13,10,6])
+
+    def test_centerPoint(self):
+        my_algo_in = self.make_my_graph()
+        self.assertEqual(my_algo_in.centerPoint()[0],6)
+        self.assertEqual(my_algo_in.centerPoint()[1], 4.2)
 
     def test_plot_graph(self):
         my_algo_in = self.make_my_graph()
@@ -119,10 +135,26 @@ class TestGraphAlgo(TestCase):
 
 
     def test_get_transpose(self):
-        self.fail()
+        my_algo_in = self.make_my_graph()
+        my_algo_tr = self.make_my_graph()
+        my_algo_tr.get_transpose()
+        self.assertEqual(my_algo_tr.graph.num_edges, my_algo_in.graph.num_edges)
+        self.assertEqual(my_algo_tr.graph.num_nodes, my_algo_in.graph.num_nodes)
+        self.assertEqual(my_algo_tr.graph.nodes.get(0).in_edges.get(2), my_algo_in.graph.nodes.get(0).out_edges.get(2))
+        self.assertEqual(my_algo_tr.graph.nodes.get(13).out_edges.get(7), my_algo_in.graph.nodes.get(13).in_edges.get(7))
 
     def test_set_tags_weight(self):
-        self.fail()
+        my_algo_in = self.make_my_graph()
+        my_algo_in.set_tags_weight()
+        self.assertEqual(my_algo_in.graph.nodes.get(6).tag, -1)
+        self.assertEqual(my_algo_in.graph.nodes.get(10).info, 'w')
+        self.assertEqual(my_algo_in.graph.nodes.get(0).weight, float('inf'))
+        self.assertEqual(my_algo_in.graph.nodes.get(2).tag, -1)
 
     def test_is_connected(self):
-        self.fail()
+        my_algo_in = self.make_my_graph()
+        self.assertEqual(my_algo_in.is_connected(), True)
+        my_algo_in.graph.remove_node(0)
+        self.assertEqual(my_algo_in.is_connected(), True)
+        my_algo_in.graph.remove_edge(6, 2)
+        self.assertEqual(my_algo_in.is_connected(), False)
