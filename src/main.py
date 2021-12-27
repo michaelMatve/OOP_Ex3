@@ -72,7 +72,6 @@ def check2():
     g_algo = GraphAlgo()
     file = '../data/A5.json'
     g_algo.load_from_json(file)
-    print(g_algo.graph.num_edges)
     g_algo.get_graph().remove_edge(13, 14)
     g_algo.save_to_json(file + "_edited")
     dist, path = g_algo.shortest_path(1, 7)

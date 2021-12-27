@@ -14,7 +14,7 @@ class Node:
         self.info = 'w'
 
     def __repr__(self):
-        return "0: |edges_out| {} |edges in| {}".format(len(self.out_edges), len(self.in_edges))
+        return "{}: |edges_out| {} |edges in| {}".format(self.id, len(self.out_edges), len(self.in_edges))
 
 
 
