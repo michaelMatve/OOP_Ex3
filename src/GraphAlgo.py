@@ -12,7 +12,7 @@ class GraphAlgo(GraphAlgoInterface):
         self.graph = graph
 
     def get_graph(self) -> GraphInterface:
-        pass
+        return self.graph
 
     def load_from_json(self, file_name: str) -> bool:
         try:
