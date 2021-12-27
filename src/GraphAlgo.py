@@ -130,7 +130,7 @@ class GraphAlgo(GraphAlgoInterface):
 
 
     """
-    this function generates a random pos fo the node
+    this function generates a random pos for the node
     """
 
     def random_pos(self) -> tuple:
