@@ -7,14 +7,14 @@ class TestGraphAlgo(TestCase):
 
     def make_my_graph(self):
         my_algo = GraphAlgo()
-        my_algo.graph.add_node((1.1, 1.5, 0), 0)
-        my_algo.graph.add_node((1.4, 1.3 , 0), 2)
-        my_algo.graph.add_node((1.1, 0.5, 0), 5)
-        my_algo.graph.add_node((1.3, 1, 0), 6)
-        my_algo.graph.add_node((1.5, 0.8, 0), 7)
-        my_algo.graph.add_node((2.0, 1.1, 0), 10)
-        my_algo.graph.add_node((2.5, 1.4, 0), 12)
-        my_algo.graph.add_node((1.3, 0.3, 0), 13)
+        my_algo.graph.add_node(0, (1.1, 1.5, 0))
+        my_algo.graph.add_node(2, (1.4, 1.3 , 0))
+        my_algo.graph.add_node(5,(1.1, 0.5, 0))
+        my_algo.graph.add_node(6, (1.3, 1, 0))
+        my_algo.graph.add_node(7, (1.5, 0.8, 0))
+        my_algo.graph.add_node(10, (2.0, 1.1, 0))
+        my_algo.graph.add_node(12,(2.5, 1.4, 0))
+        my_algo.graph.add_node(13, (1.3, 0.3, 0))
         my_algo.graph.add_edge(0, 2, 1.2)
         my_algo.graph.add_edge(2, 0, 2.5)
         my_algo.graph.add_edge(2, 10, 1.8)
@@ -30,13 +30,33 @@ class TestGraphAlgo(TestCase):
         return my_algo
 
     def test_get_graph(self):
-        self.fail()
+        my_algo_in = self.make_my_graph()
+        my_graph = my_algo_in.get_graph()
+        self.assertEqual(my_graph.num_edges, my_algo_in.graph.num_edges)
+        self.assertEqual(my_graph.num_nodes, my_algo_in.graph.num_nodes)
+        self.assertEqual(my_graph.nodes.get(0).out_edges.get(2), my_algo_in.graph.nodes.get(0).out_edges.get(2))
+        self.assertEqual(my_graph.nodes.get(13).in_edges.get(7), my_algo_in.graph.nodes.get(13).in_edges.get(7))
+
 
     def test_load_from_json(self):
-        self.fail()
+        my_algo_in = self.make_my_graph()
+        my_algo_in.save_to_json('testLoad.json')
+        my_algo_js = GraphAlgo()
+        self.assertEqual(my_algo_js.load_from_json('testLoad.json'),True)
+        self.assertEqual(my_algo_js.graph.num_edges,my_algo_in.graph.num_edges)
+        self.assertEqual(my_algo_js.graph.num_nodes, my_algo_in.graph.num_nodes)
+        self.assertEqual(my_algo_js.graph.nodes.get(0).out_edges.get(2), my_algo_in.graph.nodes.get(0).out_edges.get(2))
+        self.assertEqual(my_algo_js.graph.nodes.get(13).in_edges.get(7), my_algo_in.graph.nodes.get(13).in_edges.get(7))
 
     def test_save_to_json(self):
-        self.fail()
+        my_algo_in = self.make_my_graph()
+        my_algo_in.save_to_json('testLoad.json')
+        my_algo_js = GraphAlgo()
+        self.assertEqual(my_algo_js.load_from_json('testLoad.json'), True)
+        self.assertEqual(my_algo_js.graph.num_edges, my_algo_in.graph.num_edges)
+        self.assertEqual(my_algo_js.graph.num_nodes, my_algo_in.graph.num_nodes)
+        self.assertEqual(my_algo_js.graph.nodes.get(0).out_edges.get(2), my_algo_in.graph.nodes.get(0).out_edges.get(2))
+        self.assertEqual(my_algo_js.graph.nodes.get(13).in_edges.get(7), my_algo_in.graph.nodes.get(13).in_edges.get(7))
 
     def test_shortest_path(self):
         self.fail()
@@ -45,25 +65,58 @@ class TestGraphAlgo(TestCase):
         self.fail()
 
     def test_center_point(self):
-        self.fail()
+        my_algo_in = self.make_my_graph()
+        self.assertEqual(my_algo_in.is_connected(),True)
+        my_algo_in.graph.remove_node(0)
+        self.assertEqual(my_algo_in.is_connected(), True)
+        my_algo_in.graph.remove_edge(6,2)
+        self.assertEqual(my_algo_in.is_connected(), False)
 
     def test_plot_graph(self):
-        self.fail()
+        my_algo_in = self.make_my_graph()
+        my_algo_in.plot_graph()
 
     def test_random_pos(self):
-        self.fail()
+        my_algo_in = self.make_my_graph()
+        self.assertEqual(((my_algo_in.random_pos())[0]>35.187594216303474), True)
+        self.assertEqual(((my_algo_in.random_pos())[0] > 35.21310882485876), False)
+        self.assertEqual(((my_algo_in.random_pos())[1] < 32.10788938151261), True)
+        self.assertEqual(((my_algo_in.random_pos())[1] < 32.10152879327731), False)
+
 
     def test_to_json_file(self):
-        self.fail()
+        my_algo_in = self.make_my_graph()
+        dict = my_algo_in.to_json_file()
+        self.assertEqual(len(dict['Edges']), my_algo_in.graph.num_edges)
+        self.assertEqual(len(dict['Nodes']), my_algo_in.graph.num_nodes)
 
     def test_dijkstra_algo(self):
-        self.fail()
+        my_algo_in = self.make_my_graph()
+        my_algo_in.dijkstra_algo(0)
+        self.assertEqual(my_algo_in.graph.nodes.get(10).weight,3)
+        self.assertEqual(my_algo_in.graph.nodes.get(12).weight, 4)
+        self.assertEqual(my_algo_in.graph.nodes.get(5).weight, 5.5)
+        my_algo_in.dijkstra_algo(5)
+        self.assertEqual(my_algo_in.graph.nodes.get(6).weight, 5.75)
+        self.assertEqual(my_algo_in.graph.nodes.get(12).weight, 5.65)
+        self.assertEqual(my_algo_in.graph.nodes.get(10).weight, 4.65)
 
     def test_max_dist(self):
-        self.fail()
+        my_algo_in = self.make_my_graph()
+        self.assertEqual(my_algo_in.max_dist(0), 5.7)
+        self.assertEqual(my_algo_in.max_dist(6), 4.2)
 
     def test_dfs(self):
-        self.fail()
+        my_algo_in = self.make_my_graph()
+        my_algo_in.dfs(my_algo_in.graph.nodes.get(0))
+        self.assertEqual(my_algo_in.graph.nodes.get(6).tag,1)
+        self.assertEqual(my_algo_in.graph.nodes.get(13).tag,1)
+        my_algo_in.graph.remove_edge(0,2)
+        my_algo_in.set_tags_weight()
+        my_algo_in.dfs(my_algo_in.graph.nodes.get(0))
+        self.assertEqual(my_algo_in.graph.nodes.get(6).tag, -1)
+        self.assertEqual(my_algo_in.graph.nodes.get(13).tag, -1)
+
 
     def test_get_transpose(self):
         self.fail()

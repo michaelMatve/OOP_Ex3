@@ -256,14 +256,18 @@ class GraphAlgo(GraphAlgoInterface):
 
     def is_connected(self):
         self.set_tags_weight() # sets the tag of every node to -1
-        self.dfs(self.graph.nodes.get(0)) # does dfs on the first node in the graph
+        check_id =0
+        for d in self.graph.nodes:
+            check_id=d
+            break;
+        self.dfs(self.graph.nodes.get(check_id)) # does dfs on the first node in the graph
         for i in self.graph.nodes.values(): # checks if after the dfs there is a node with tag -1, if so it means the graph isnt SCC
             if i.tag == -1:
                 return False
 
         self.get_transpose() # make a transpose graph
         self.set_tags_weight() # sets the tag of every node to -1
-        self.dfs(self.graph.nodes.get(0)) # does dfs on the first node in the graph
+        self.dfs(self.graph.nodes.get(check_id)) # does dfs on the first node in the graph
         for i in self.graph.nodes.values(): # checks if after the dfs there is a node with tag -1, if so it means the graph isnt SCC
             if i.tag == -1:
                 self.get_transpose() # returns the graph to it original form
