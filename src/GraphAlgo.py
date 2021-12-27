@@ -9,86 +9,103 @@ from node import Node
 from src.GraphInterface import GraphInterface
 
 """
-
+    this class implements the GraphAlgoInterface
+    this class contain object of DiGraph
+    and contain all the algoritem function that we can do on graph: shortestputh , tsp, center and more
 """
 class GraphAlgo(GraphAlgoInterface):
     def __init__(self, graph: DiGraph=None):
         if graph==None:
             graph = DiGraph()
         self.graph = graph
-
+    """
+        this function return the graph
+    """
 
 
     def get_graph(self) -> GraphInterface:
         return self.graph
-
+    """
+        this function load a graph from json file named we get (file_name)
+        return False if file and true if worked
+    """
     def load_from_json(self, file_name: str) -> bool:
         try:
             with open(file_name, 'r') as file:
-                temp_dict = json.load(file)
+                temp_dict = json.load(file) # make dict from the json
 
-            for node in temp_dict['Nodes']:
+            for node in temp_dict['Nodes']: # run on all the nodes and add them to our graph
                 if node.get('pos') != None:
                     self.graph.add_node(node.get('id'), tuple(float(s) for s in node.get('pos').strip("()").split(",")))
                 else:
                     self.graph.add_node(node.get('id'))
-            for edge in temp_dict['Edges']:
+            for edge in temp_dict['Edges']: # run on all the edges and add all the edges to our graph
                 self.graph.add_edge(edge.get('src'), edge.get('dest'), edge.get('w'))
         except IOError as e:
             print(e)
             return False
         return True
-
+    """
+        this function use the the function to_json_file for creating a dict to the right format
+        return False if file and true if worked
+    """
     def save_to_json(self, file_name: str) -> bool:
         try:
             with open(file_name, 'w') as file:
-                temp_dict = self.to_json_file()
-                json.dump(temp_dict, indent=4, fp=file)
+                temp_dict = self.to_json_file() # creat a dict in the asked format
+                json.dump(temp_dict, indent=4, fp=file) # write the dict to the file name "file_name"
         except IOError as e:
             print(e)
             return False
         return True
 
+    """
+        this function gets src and dest and return tuple of the list for the path and the distant between 
+        src and dest.
+        if no path we return  (float("inf"),[])
+    """
     def shortest_path(self, id1: int, id2: int) -> (float, list):
-        self.dijkstra_algo(id1)
+        self.dijkstra_algo(id1)#run dijkstra_algo to fill the graph
         answerList = []
         check_node = self.graph.nodes.get(id2)
-        if(check_node.tag == -1):
+        if(check_node.tag == -1):# check if there is path
             return (float("inf"),[])
-        while check_node.tag != -1:
+        while check_node.tag != -1: # run on all the nudes in the path and add them to the list
             answerList.insert(0,check_node.id)
             check_node = self.graph.nodes.get(check_node.tag)
         answerList.insert(0,check_node.id)
-        answer = (self.graph.nodes.get(id2).weight,answerList)
+        answer = (self.graph.nodes.get(id2).weight,answerList) # return the result
         return answer
-
+    """
+        the function return tuple contain the path we need to do in list and the distant we travel
+        if cant do will return ([],float("inf"))
+    """
     def TSP(self, node_lst: List[int]) -> (List[int], float):
-        sum = 0.0
-        answerlist = []
-        run_node_id = node_lst[0]
+        sum = 0.0 # set sum to 0
+        answerlist = [] # start new list
+        run_node_id = node_lst[0] # start from the first node id in the list
         dest_node_id = run_node_id
-        while run_node_id!=None and len(node_lst)>1:
-            node_lst.remove(run_node_id)
-            self.dijkstra_algo(run_node_id)
-            mindist = float("inf")
-            for id_n in node_lst:
+        while run_node_id!=None and len(node_lst)>1: # run until the list length is 1 or no value in the run_node
+            node_lst.remove(run_node_id)# remove the check node
+            self.dijkstra_algo(run_node_id)# run dijkstra_algo for fill the nodes data
+            mindist = float("inf") # set min distant to max value of float
+            for id_n in node_lst:# check all the node id that in the list
                 temp_node = self.graph.nodes.get(id_n)
-                if temp_node.weight<mindist:
-                    mindist = temp_node.weight
-                    dest_node_id = temp_node.id
-            if mindist==float("inf"):
+                if temp_node.weight<mindist:# take the node with the smallest distant
+                    mindist = temp_node.weight # save his distant
+                    dest_node_id = temp_node.id # save his id
+            if mindist==float("inf"): # if no node to go return empty and max value
                 return ([],float("inf"))
-            sum = sum + mindist
-            check_node = self.graph.nodes.get(dest_node_id)
-            temp_list =[]
-            while check_node.tag != -1:
+            sum = sum + mindist # add the dist that we travel to the sum
+            check_node = self.graph.nodes.get(dest_node_id) # get the dest node
+            temp_list =[] # make temp list
+            while check_node.tag != -1: # add all the nodes id in the path to the temp list
                 temp_list.insert(0,check_node.id)
                 check_node = self.graph.nodes.get(check_node.tag)
-            temp_list.insert(0, check_node.id)
-            while len(temp_list)!=1:
+            while len(temp_list)!=0: # copy the temp list data in to the answer list
                 answerlist.append(temp_list.pop(0))
-            run_node_id = dest_node_id
-        answerlist.append(self.graph.nodes.get(run_node_id).id)
+            run_node_id = dest_node_id # chang the run nude to the node id we go to
+        answerlist.append(self.graph.nodes.get(run_node_id).id) # add the last node id that in the list
         return (answerlist, sum)
 
 
@@ -141,38 +158,43 @@ class GraphAlgo(GraphAlgoInterface):
         return ans  # returns the new pos
 
 
-
+    """
+        this function return dict what we can write to the jason in the format we was asked
+    """
     def to_json_file(self):
-        temp_dict = {}
-        temp_dict['Edges'] = []
-        temp_dict['Nodes'] = []
-        for node in self.graph.nodes.values():
-            if node.pos!=None:
+        temp_dict = {}# make new dict
+        temp_dict['Edges'] = [] # add list with key=Edges
+        temp_dict['Nodes'] = [] # add list with key=Nodes
+        for node in self.graph.nodes.values(): # get all the Nodes and add them to the Nodes list
+            if node.pos!=None: # check if pos is not null
                 temp_dict['Nodes'].append({'pos': "{},{},{}".format(node.pos[0], node.pos[1], node.pos[2]), 'id': node.id})
             else:
                 temp_dict['Nodes'].append({'id': node.id})
-            for d in node.out_edges:
+            for d in node.out_edges: # get all the edges and add them to the edges list
                 temp_dict['Edges'].append({'src': node.id, 'w': node.out_edges[d], 'dest': d})
         return temp_dict
-
+    """
+        this function implement dijkstra_algo and fill the nodes data with the distant in the weight, tag= node before(if None -1
+          and info = if visited if None 'w'
+    """
     def dijkstra_algo(self, src: int):
-        self.set_tags_weight()
-        run_node = self.graph.nodes.get(src)
-        run_node.weight = 0.0
-        while run_node != None:
-            run_node.info = 'b'
-            for des in run_node.out_edges:
+        self.set_tags_weight()# set all data to defult
+        run_node = self.graph.nodes.get(src) # take the src node
+        run_node.weight = 0.0 # set his weight to 0
+        while run_node != None: #run until there are no node that wasnt visited and we can get to them every time takes the min distant
+            run_node.info = 'b' # set visited
+            for des in run_node.out_edges: # run on all the out edge
                 temp_node = self.graph.nodes.get(des)
-                if temp_node.info == 'w':
-                    if temp_node.weight > (run_node.weight + run_node.out_edges.get(des)):
-                        temp_node.weight = run_node.weight + run_node.out_edges.get(des)
-                        temp_node.tag = run_node.id
-            run_node = None
-            for node in self.graph.nodes.values():
-                if node.info == 'w' and node.tag != -1:
-                    if run_node == None:
+                if temp_node.info == 'w': # check if the dest was visited ar not and if not
+                    if temp_node.weight > (run_node.weight + run_node.out_edges.get(des)): #check if it get to him in smaller distant by passing the src(run) node if yea
+                        temp_node.weight = run_node.weight + run_node.out_edges.get(des) # change his wight to the run node weight + edge weigth
+                        temp_node.tag = run_node.id # change the tag to the run node id
+            run_node = None # set run node to NOne
+            for node in self.graph.nodes.values(): # run on all the nodes
+                if node.info == 'w' and node.tag != -1: # check if we can get to the node and it wasnt visited
+                    if run_node == None: # if the run node value is None set the node
                         run_node = node
-                    elif node.weight < run_node.weight:
+                    elif node.weight < run_node.weight: # if the node value smaller then the run set it
                         run_node = node
         return
 
@@ -247,6 +269,7 @@ class GraphAlgo(GraphAlgoInterface):
                 return False
         self.get_transpose() # returns the graph to it original form
         return True
+
 
 
 
