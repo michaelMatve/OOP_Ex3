@@ -18,10 +18,12 @@ class GraphAlgo(GraphAlgoInterface):
         if graph==None:
             graph = DiGraph()
         self.graph = graph
+
+
+
     """
         this function return the graph
     """
-
 
     def get_graph(self) -> GraphInterface:
         return self.graph
