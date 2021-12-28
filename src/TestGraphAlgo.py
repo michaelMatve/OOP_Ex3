@@ -48,6 +48,13 @@ class TestGraphAlgo(TestCase):
         self.assertEqual(my_algo_js.graph.nodes.get(0).out_edges.get(2), my_algo_in.graph.nodes.get(0).out_edges.get(2))
         self.assertEqual(my_algo_js.graph.nodes.get(13).in_edges.get(7), my_algo_in.graph.nodes.get(13).in_edges.get(7))
 
+        graph = GraphAlgo()
+        # graph.load_from_json("..\\data\\n1000.json")
+        # graph.load_from_json("..\\data\\n10000.json")
+        # graph.load_from_json("..\\data\\n100000.json")
+
+
+
     def test_save_to_json(self):
         my_algo_in = self.make_my_graph()
         my_algo_in.save_to_json('testLoad.json')
@@ -57,6 +64,9 @@ class TestGraphAlgo(TestCase):
         self.assertEqual(my_algo_js.graph.num_nodes, my_algo_in.graph.num_nodes)
         self.assertEqual(my_algo_js.graph.nodes.get(0).out_edges.get(2), my_algo_in.graph.nodes.get(0).out_edges.get(2))
         self.assertEqual(my_algo_js.graph.nodes.get(13).in_edges.get(7), my_algo_in.graph.nodes.get(13).in_edges.get(7))
+
+        graph = GraphAlgo()
+
 
     def test_shortest_path(self):
         my_algo_in = self.make_my_graph()
@@ -79,14 +89,27 @@ class TestGraphAlgo(TestCase):
         self.assertEqual(my_algo_in.TSP([12,0, 10, 6])[1], 8.45)
         self.assertEqual((my_algo_in.TSP([12,0, 10, 6])[0]), [12,13,10,6,2,0])
         my_algo_in.dijkstra_algo(13)
-        print(my_algo_in.graph.nodes.get(5).weight)
         self.assertEqual(my_algo_in.TSP([0,12,10,6])[1], 8.65)
         self.assertEqual(my_algo_in.TSP([0,12,10,6])[0], [0,2,10,12,13,10,6])
+
+        # graph = GraphAlgo()
+        # graph.load_from_json("nss1000.json")
+        # self.assertEqual((graph.TSP([12,0, 10, 6])[0]), [12, 765, 346, 10, 200, 88, 6, 329, 54, 0])
+
+
+
+
 
     def test_centerPoint(self):
         my_algo_in = self.make_my_graph()
         self.assertEqual(my_algo_in.centerPoint()[0],6)
         self.assertEqual(my_algo_in.centerPoint()[1], 4.2)
+
+        # graph = GraphAlgo()
+        # graph.load_from_json("nss1000.json")
+        # self.assertEqual(245, graph.centerPoint()[0])
+
+
 
     def test_plot_graph(self):
         my_algo_in = self.make_my_graph()
