@@ -3,10 +3,10 @@ import random
 from typing import List
 import matplotlib.pyplot as plt
 
-from src.GraphAlgoInterface import GraphAlgoInterface
+from GraphAlgoInterface import GraphAlgoInterface
 from DiGraph import DiGraph
 from node import Node
-from src.GraphInterface import GraphInterface
+from GraphInterface import GraphInterface
 
 """
     this class implements the GraphAlgoInterface
