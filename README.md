@@ -1,4 +1,6 @@
 # OOP_Ex3
+## how to operate the project
+at the beginning you should install matplolic via command pip - install matplotlib (in the cmd). after that you should import the project to your IDE by clonnig the project from github. next, you can run the code by 2 different ways. the first, you could run main.py and ex3.py in your IDE. the second way is by running through the cmd, you should go into the project, into src, and then sould run the command - python3 ex3.py (make sure you installed python3). 
 ## The Main Classes
 The classes we chose to create are: </br>
 1. Node
